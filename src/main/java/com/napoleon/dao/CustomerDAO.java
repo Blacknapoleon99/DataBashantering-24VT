@@ -1,3 +1,8 @@
+package com.napoleon.dao;
+
+import com.napoleon.config.DatabaseConfig;
+import com.napoleon.model.Customer;
+
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;

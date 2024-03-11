@@ -1,0 +1,9 @@
+com\napoleon\config\DatabaseConfig.class
+com\napoleon\model\Customer.class
+com\napoleon\model\MobileDevice.class
+com\napoleon\dao\CustomerDAO.class
+com\napoleon\dao\RepairJobDAO.class
+com\napoleon\util\ConnectionManager.class
+com\napoleon\application\Main.class
+com\napoleon\dao\MobileDeviceDAO.class
+com\napoleon\model\RepairJob.class

@@ -1,3 +1,5 @@
+package com.napoleon.model;
+
 import java.sql.Timestamp;
 
 public class MobileDevice {

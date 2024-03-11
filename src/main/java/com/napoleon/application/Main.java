@@ -1,4 +1,13 @@
+package com.napoleon.application;
+
+
+
 import java.sql.Timestamp;
+import com.napoleon.dao.CustomerDAO;
+import com.napoleon.dao.MobileDeviceDAO;
+import com.napoleon.dao.RepairJobDAO;
+import com.napoleon.model.Customer;
+import com.napoleon.model.MobileDevice;
 
 
 public class Main {
@@ -8,9 +17,9 @@ public class Main {
         RepairJobDAO repairJobDao = new RepairJobDAO();
 
         //  skapa en ny kund
-        Customer newCustomer = new Customer(0, "John Doe", "john.doe@example.com", "555-0123", "123 Main St");
+        Customer newCustomer = new Customer(0, "John Doe", "john.doe@example.com", "555-0123", "123 com.napoleon.application.Main St");
         boolean customerInserted = customerDao.insertCustomer(newCustomer);
-        System.out.println("Customer inserted: " + customerInserted);
+        System.out.println("com.napoleon.model.Customer inserted: " + customerInserted);
 
         // skapa en ny mobil enhet för kunden
         // Antag att vi har kund-ID 1 för den nyligen införda kunden

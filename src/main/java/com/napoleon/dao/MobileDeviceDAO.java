@@ -1,3 +1,9 @@
+package com.napoleon.dao;
+
+import com.napoleon.config.DatabaseConfig;
+
+import com.napoleon.model.MobileDevice;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;

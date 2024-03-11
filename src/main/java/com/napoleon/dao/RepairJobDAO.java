@@ -1,3 +1,9 @@
+package com.napoleon.dao;
+
+import com.napoleon.config.DatabaseConfig;
+import com.napoleon.model.RepairJob;
+
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
