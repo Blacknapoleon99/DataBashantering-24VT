@@ -12,6 +12,7 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
+import java.sql.Statement;
 
 public class MobileDeviceDAO {
 
@@ -22,6 +23,35 @@ public class MobileDeviceDAO {
                 DatabaseConfig.getPassword());
     }
 
+
+
+    public int insertMobileDevice(MobileDevice device) {
+        String sql = "INSERT INTO mobile_devices (customer_id, brand, model, serial_number, submission_date) VALUES (?, ?, ?, ?, ?)";
+        try (Connection conn = getConnection(); PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+            stmt.setInt(1, device.getCustomerId());
+            stmt.setString(2, device.getBrand());
+            stmt.setString(3, device.getModel());
+            stmt.setString(4, device.getSerialNumber());
+            stmt.setTimestamp(5, device.getSubmissionDate());
+
+            int affectedRows = stmt.executeUpdate();
+            if (affectedRows == 0) {
+                throw new SQLException("Creating device failed, no rows affected.");
+            }
+
+            try (ResultSet generatedKeys = stmt.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    device.setDeviceId(generatedKeys.getInt(1)); // Sätt deviceId för objektet
+                    return generatedKeys.getInt(1); // Returnera det genererade deviceId
+                } else {
+                    throw new SQLException("Creating device failed, no ID obtained.");
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return -1; // Eller hantera felet på ett lämpligt sätt
+        }
+    }
     public int getLatestDeviceId() throws SQLException {
         String sql = "SELECT device_id FROM mobile_devices ORDER BY device_id DESC LIMIT 1";
         try (Connection conn = getConnection(); PreparedStatement stmt = conn.prepareStatement(sql); ResultSet rs = stmt.executeQuery()) {
@@ -33,26 +63,18 @@ public class MobileDeviceDAO {
         }
     }
 
-    public boolean insertMobileDevice(MobileDevice device) {
-        String sql = "INSERT INTO mobile_devices (customer_id, brand, model, serial_number, submission_date) VALUES (?, ?, ?, ?, ?)";
+    public boolean deviceExists(int deviceId) {
+        String sql = "SELECT 1 FROM mobile_devices WHERE device_id = ?";
         try (Connection conn = getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setInt(1, device.getCustomerId());
-            stmt.setString(2, device.getBrand());
-            stmt.setString(3, device.getModel());
-            stmt.setString(4, device.getSerialNumber());
-            if (device.getSubmissionDate() != null) {
-                stmt.setTimestamp(5, new Timestamp(device.getSubmissionDate().getTime()));
-            } else {
-                stmt.setTimestamp(5, null); // Hantera null-värdet
-            }
-
-            int affectedRows = stmt.executeUpdate();
-            return affectedRows > 0;
+            stmt.setInt(1, deviceId);
+            ResultSet rs = stmt.executeQuery();
+            return rs.next(); // Returnerar true om raden existerar, annars false
         } catch (SQLException e) {
             e.printStackTrace();
             return false;
         }
     }
+
 
     public MobileDevice getMobileDeviceById(int deviceId) {
         String sql = "SELECT * FROM mobile_devices WHERE device_id = ?";

@@ -49,6 +49,7 @@ public class Main {
             repairJobDao.insertRepairJob(janeRepairJob);
 
 
+
             // Visa information om alla poster
             System.out.println("Alla kunder:");
             customerDao.getAllCustomers().forEach(System.out::println);
