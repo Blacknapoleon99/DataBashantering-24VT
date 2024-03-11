@@ -467,7 +467,7 @@ public class Main {
             } else {
                 System.out.println("\nLista över alla reparationsjobb:");
                 for (RepairJob job : repairJobs) {
-                    
+
                     System.out.println("Job ID: " + job.getJobId() +
                             ", Device ID: " + job.getDeviceId() +
                             ", Problem: " + job.getProblemDescription() +
