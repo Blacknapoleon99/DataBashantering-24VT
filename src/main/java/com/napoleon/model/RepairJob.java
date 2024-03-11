@@ -11,7 +11,7 @@ public class RepairJob {
     private Timestamp completionDate;
     private String status;
     private String notes;
-    private String SubmissionDate;
+    private Timestamp submissionDate;
 
 
 
@@ -35,10 +35,6 @@ public class RepairJob {
         this.completionDate = completionDate;
         this.notes = notes;
     }
-
-
-
-
 
     // Getters och Setters
     public int getJobId() {
@@ -97,8 +93,12 @@ public class RepairJob {
     public void setStatus(String status) {
         this.status = status;
     }
-    public String getSubmissionDate() {
-        return SubmissionDate;
+    public Timestamp getSubmissionDate() {
+        return submissionDate;
+    }
+
+    public void setSubmissionDate(Timestamp submissionDate) {
+        this.submissionDate = submissionDate;
     }
 
     public Timestamp getCompletionDate() {

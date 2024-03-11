@@ -336,7 +336,7 @@ public class Main {
             }
         }
     }
-    
+
     // Ska implementera input-validering och felhantering för varje metod.
 
     private static void deleteMobileDevice() {
@@ -374,8 +374,18 @@ public class Main {
             System.out.print("Ange problem beskrivning: ");
             String problemDescription = scanner.nextLine();
 
-            System.out.print("Ange status för reparationen (t.ex. 'pending', 'in_progress', 'completed'): ");
-            String status = scanner.nextLine();
+            System.out.print("Ange status för reparationen (t.ex. 'received', 'in_progress', 'completed', 'delivered'): ");
+            String status = scanner.nextLine().toLowerCase(); // Normalisera input till lowercase
+            switch (status) {
+                case "received":
+                case "in_progress":
+                case "completed":
+                case "delivered":
+                    break; // giltiga värden
+                default:
+                    System.out.println("Ogiltig status. Använd endast 'received', 'in_progress', 'completed', 'delivered'.");
+                    return;
+            }
 
             System.out.print("Ange beräknat färdigdatum (YYYY-MM-DD), lämna tomt om okänt: ");
             String estimatedCompletionStr = scanner.nextLine();
@@ -392,12 +402,11 @@ public class Main {
             } else {
                 System.out.println("Det gick inte att lägga till reparationsjobbet.");
             }
-        } catch (NumberFormatException e) {
-            System.out.println("Felaktig inmatning, var vänlig och ange numeriska värden där det efterfrågas.");
         } catch (Exception e) {
             System.out.println("Ett fel uppstod: " + e.getMessage());
         }
     }
+
 
     private static void deleteRepairJob() {
         try {
@@ -457,20 +466,18 @@ public class Main {
             } else {
                 System.out.println("\nLista över alla reparationsjobb:");
                 for (RepairJob job : repairJobs) {
-                    System.out.println("Job ID: " + job.getJobId() + ", Device ID: " + job.getDeviceId() +
+
+                    System.out.println("Job ID: " + job.getJobId() +
+                            ", Device ID: " + job.getDeviceId() +
                             ", Problem: " + job.getProblemDescription() +
                             ", Status: " + job.getStatus() +
-                            ", Submission Date: " + job.getSubmissionDate()); // Antagande att dessa getters finns
+                            ", Submission Date: " + (job.getSubmissionDate() != null ? job.getSubmissionDate().toString() : "N/A"));
                 }
             }
         } catch (SQLException e) {
             System.out.println("Ett fel uppstod när reparationsjobben skulle listas: " + e.getMessage());
         }
     }
-
-
-
-
     private static int getValidatedIntegerInput(String prompt) {
         int input = -1;
         while (input < 0) {

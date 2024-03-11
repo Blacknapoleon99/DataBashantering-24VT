@@ -88,15 +88,10 @@ public class MobileDevice {
 
     @Override
     public String toString() {
-        return "MobileDevice{" +
-                "deviceId=" + deviceId +
-                ", customerId=" + customerId +
-                ", brand='" + brand + '\'' +
-                ", model='" + model + '\'' +
-                ", serialNumber='" + serialNumber + '\'' +
-                ", submissionDate=" + submissionDate +
-                '}';
+        return String.format("Device ID: %d, Customer ID: %d, Brand: %s, Model: %s, Serial Number: %s, Submission Date: %s",
+                deviceId, customerId, brand, model, serialNumber, submissionDate != null ? submissionDate.toString() : "N/A");
     }
+
 
 }
 
