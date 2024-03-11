@@ -59,22 +59,24 @@ import java.sql.Timestamp;
             List<RepairJob> repairJobs = new ArrayList<>();
             String sql = "SELECT * FROM repair_jobs";
             try (Connection conn = getConnection(); PreparedStatement stmt = conn.prepareStatement(sql); ResultSet rs = stmt.executeQuery()) {
-
                 while (rs.next()) {
-                    repairJobs.add(new RepairJob(
-                            rs.getInt("job_id"),
-                            rs.getInt("device_id"),
-                            rs.getString("problem_description"),
-                            rs.getString("repair_status"),
-                            rs.getTimestamp("estimated_completion_date"),
-                            rs.getTimestamp("completion_date"),
-                            rs.getString("notes"))); // Inkludera "notes" från resultset
+                    int jobId = rs.getInt("job_id");
+                    int deviceId = rs.getInt("device_id");
+                    String problemDescription = rs.getString("problem_description");
+                    String repairStatus = rs.getString("repair_status"); // Kan vara null
+                    Timestamp estimatedCompletionDate = rs.getTimestamp("estimated_completion_date"); // Kan vara null
+                    Timestamp completionDate = rs.getTimestamp("completion_date"); // Kan vara null
+                    String notes = rs.getString("notes"); // Kan vara null men hanteras ok direkt
+
+                    RepairJob job = new RepairJob(jobId, deviceId, problemDescription, repairStatus, estimatedCompletionDate, completionDate, notes);
+                    repairJobs.add(job);
                 }
             } catch (SQLException e) {
                 e.printStackTrace();
             }
             return repairJobs;
         }
+
 
     public RepairJob getRepairJobById(int jobId) {
         String sql = "SELECT * FROM repair_jobs WHERE job_id = ?";

@@ -18,6 +18,7 @@ public class Main {
     private static final CustomerDAO customerDao = new CustomerDAO();
     private static final MobileDeviceDAO mobileDeviceDao = new MobileDeviceDAO();
     private static final RepairJobDAO repairJobDao = new RepairJobDAO();
+
     private static final Scanner scanner = new Scanner(System.in);
 
 
@@ -32,7 +33,7 @@ public class Main {
             System.out.println("4. Avsluta programmet");
             System.out.print("Välj ett alternativ: ");
 
-            int choice = Integer.parseInt(scanner.nextLine()); // Använd nextLine för att undvika input-fel
+            int choice = Integer.parseInt(scanner.nextLine()); // nextLine för att undvika input-fel
 
             switch (choice) {
                 case 1:
@@ -444,7 +445,7 @@ public class Main {
 
             System.out.print("Ange ny status (lämna tomt för att inte ändra): ");
             String status = scanner.nextLine();
-            if (!status.isEmpty()) jobToUpdate.setStatus(status);
+            if (!status.isEmpty()) jobToUpdate.setRepairStatus(status);
 
             boolean success = repairJobDao.updateRepairJob(jobToUpdate);
 
@@ -460,18 +461,18 @@ public class Main {
 
     private static void listRepairJobs() {
         try {
-            List<RepairJob> repairJobs = repairJobDao.getAllRepairJobs();
+            List<RepairJob> repairJobs = repairJobDao.getAllRepairJobs(); // Antag att detta är en metod som hämtar alla reparationsjobb.
             if (repairJobs.isEmpty()) {
                 System.out.println("Det finns inga registrerade reparationsjobb.");
             } else {
                 System.out.println("\nLista över alla reparationsjobb:");
                 for (RepairJob job : repairJobs) {
-
+                    
                     System.out.println("Job ID: " + job.getJobId() +
                             ", Device ID: " + job.getDeviceId() +
                             ", Problem: " + job.getProblemDescription() +
-                            ", Status: " + job.getStatus() +
-                            ", Submission Date: " + (job.getSubmissionDate() != null ? job.getSubmissionDate().toString() : "N/A"));
+                            ", Repair Status: " + job.getRepairStatus() +  // Uppdaterad metodnamn
+                            ", Estimated Completion Date: " + (job.getEstimatedCompletionDate() != null ? job.getEstimatedCompletionDate().toString() : "N/A")); // Uppdaterad metodnamn
                 }
             }
         } catch (SQLException e) {

@@ -9,9 +9,7 @@ public class RepairJob {
     private String repairStatus;
     private Timestamp estimatedCompletionDate;
     private Timestamp completionDate;
-    private String status;
     private String notes;
-    private Timestamp submissionDate;
 
 
 
@@ -65,41 +63,31 @@ public class RepairJob {
         return repairStatus;
     }
 
+    // Setter för repairStatus
     public void setRepairStatus(String repairStatus) {
         this.repairStatus = repairStatus;
     }
 
+    // Getter för estimatedCompletionDate
     public Timestamp getEstimatedCompletionDate() {
         return estimatedCompletionDate;
     }
 
+    // Setter för estimatedCompletionDate
     public void setEstimatedCompletionDate(Timestamp estimatedCompletionDate) {
         this.estimatedCompletionDate = estimatedCompletionDate;
-
-
     }
+
+
+    // Getter för notes
     public String getNotes() {
         return notes;
     }
-
+    // Setter för notes
     public void setNotes(String notes) {
         this.notes = notes;
     }
 
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-    public Timestamp getSubmissionDate() {
-        return submissionDate;
-    }
-
-    public void setSubmissionDate(Timestamp submissionDate) {
-        this.submissionDate = submissionDate;
-    }
 
     public Timestamp getCompletionDate() {
         return completionDate;
@@ -111,15 +99,13 @@ public class RepairJob {
 
     @Override
     public String toString() {
-        return "RepairJob{" +
-                "jobId=" + jobId +
-                ", deviceId=" + deviceId +
-                ", problemDescription='" + problemDescription + '\'' +
-                ", repairStatus='" + repairStatus + '\'' +
-                ", estimatedCompletionDate=" + estimatedCompletionDate +
-                ", completionDate=" + completionDate +
-                '}';
+        return "Job ID: " + jobId +
+                ", Device ID: " + deviceId +
+                ", Problem: " + problemDescription +
+                ", Repair Status: " + (repairStatus != null ? repairStatus : "N/A") +
+                ", Estimated Completion Date: " + (estimatedCompletionDate != null ? estimatedCompletionDate.toString() : "N/A") +
+                ", Completion Date: " + (completionDate != null ? completionDate.toString() : "N/A") +
+                ", Notes: " + (notes != null ? notes : "N/A");
     }
-
 }
 
