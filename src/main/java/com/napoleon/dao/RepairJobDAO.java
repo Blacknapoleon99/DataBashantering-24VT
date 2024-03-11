@@ -63,7 +63,7 @@ public class RepairJobDAO {
         return null;
     }
 
-    public List<RepairJob> getAllRepairJobs() {
+    public List<RepairJob> getAllRepairJobs() throws SQLException {
         List<RepairJob> repairJobs = new ArrayList<>();
         String sql = "SELECT * FROM repair_jobs";
         try (Connection conn = getConnection();

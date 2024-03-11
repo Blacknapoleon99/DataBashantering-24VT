@@ -1,5 +1,5 @@
 package com.napoleon.model;
-
+import java.sql.Timestamp;
 
 
 public class Customer {
@@ -8,19 +8,23 @@ public class Customer {
     private String email;
     private String phone;
     private String address;
+    private Timestamp createdAt;
 
     // Standardkonstruktor
     public Customer() {
     }
+    public Timestamp getCreatedAt() {
+        return createdAt;
+    }
 
     // Fullständig konstruktor
-    public Customer(int customerId, String name, String email, String phone, String address) {
-        this.customerId = customerId;
+    public Customer(String name, String email, String phone, String address) {
         this.name = name;
         this.email = email;
         this.phone = phone;
         this.address = address;
     }
+
 
     // Getters
     public int getCustomerId() {
@@ -63,4 +67,20 @@ public class Customer {
     public void setAddress(String address) {
         this.address = address;
     }
+
+    @Override
+    public String toString() {
+        return "Customer{" +
+                "customerId=" + customerId +
+                ", name='" + name + '\'' +
+                ", email='" + email + '\'' +
+                ", phone='" + phone + '\'' +
+                ", address='" + address + '\'' +
+                '}';
+    }
+
 }
+
+
+
+

@@ -10,19 +10,32 @@ public class RepairJob {
     private Timestamp estimatedCompletionDate;
     private Timestamp completionDate;
 
+    private String notes;
+
     // Standardkonstruktor
-    public RepairJob() {
+    public RepairJob(int deviceId, String problemDescription, String repairStatus, Timestamp estimatedCompletionDate, Timestamp completionDate, String notes) {
+        this.deviceId = deviceId;
+        this.problemDescription = problemDescription;
+        this.repairStatus = repairStatus;
+        this.estimatedCompletionDate = estimatedCompletionDate;
+        this.completionDate = completionDate;
+        this.notes = notes;
     }
 
     // Fullständig konstruktor
-    public RepairJob(int jobId, int deviceId, String problemDescription, String repairStatus, Timestamp estimatedCompletionDate, Timestamp completionDate) {
+    public RepairJob(int jobId, int deviceId, String problemDescription, String repairStatus, Timestamp estimatedCompletionDate, Timestamp completionDate, String notes) {
         this.jobId = jobId;
         this.deviceId = deviceId;
         this.problemDescription = problemDescription;
         this.repairStatus = repairStatus;
         this.estimatedCompletionDate = estimatedCompletionDate;
         this.completionDate = completionDate;
+        this.notes = notes;
     }
+
+
+
+
 
     // Getters och Setters
     public int getJobId() {
@@ -63,6 +76,15 @@ public class RepairJob {
 
     public void setEstimatedCompletionDate(Timestamp estimatedCompletionDate) {
         this.estimatedCompletionDate = estimatedCompletionDate;
+
+
+    }
+    public String getNotes() {
+        return notes;
+    }
+
+    public void setNotes(String notes) {
+        this.notes = notes;
     }
 
     public Timestamp getCompletionDate() {
@@ -72,4 +94,18 @@ public class RepairJob {
     public void setCompletionDate(Timestamp completionDate) {
         this.completionDate = completionDate;
     }
+
+    @Override
+    public String toString() {
+        return "RepairJob{" +
+                "jobId=" + jobId +
+                ", deviceId=" + deviceId +
+                ", problemDescription='" + problemDescription + '\'' +
+                ", repairStatus='" + repairStatus + '\'' +
+                ", estimatedCompletionDate=" + estimatedCompletionDate +
+                ", completionDate=" + completionDate +
+                '}';
+    }
+
 }
+

@@ -2,6 +2,9 @@ package com.napoleon.model;
 
 import java.sql.Timestamp;
 
+
+
+
 public class MobileDevice {
     private int deviceId;
     private int customerId;
@@ -10,11 +13,7 @@ public class MobileDevice {
     private String serialNumber;
     private Timestamp submissionDate;
 
-    // Standardkonstruktor
-    public MobileDevice() {
-    }
-
-    // Fullständig konstruktor
+    // Konstruktor utan deviceId för nya enheter som ska läggas till
     public MobileDevice(int deviceId, int customerId, String brand, String model, String serialNumber, Timestamp submissionDate) {
         this.deviceId = deviceId;
         this.customerId = customerId;
@@ -23,11 +22,20 @@ public class MobileDevice {
         this.serialNumber = serialNumber;
         this.submissionDate = submissionDate;
     }
+    // Konstruktor utan deviceId för nya enheter som ska läggas till
+    public MobileDevice(int customerId, String brand, String model, String serialNumber, Timestamp submissionDate) {
+        // Notera att deviceId inte inkluderas här, lämplig för nya enheter
+        this.customerId = customerId;
+        this.brand = brand;
+        this.model = model;
+        this.serialNumber = serialNumber;
+        this.submissionDate = submissionDate;
+    }
+
+
 
     // Getters och Setters
-    public int getDeviceId() {
-        return deviceId;
-    }
+
 
     public void setDeviceId(int deviceId) {
         this.deviceId = deviceId;
@@ -72,4 +80,24 @@ public class MobileDevice {
     public void setSubmissionDate(Timestamp submissionDate) {
         this.submissionDate = submissionDate;
     }
+
+    public int getDeviceId() {
+
+        return deviceId;
+    }
+
+    @Override
+    public String toString() {
+        return "MobileDevice{" +
+                "deviceId=" + deviceId +
+                ", customerId=" + customerId +
+                ", brand='" + brand + '\'' +
+                ", model='" + model + '\'' +
+                ", serialNumber='" + serialNumber + '\'' +
+                ", submissionDate=" + submissionDate +
+                '}';
+    }
+
 }
+
+

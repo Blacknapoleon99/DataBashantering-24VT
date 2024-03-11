@@ -22,6 +22,17 @@ public class MobileDeviceDAO {
                 DatabaseConfig.getPassword());
     }
 
+    public int getLatestDeviceId() throws SQLException {
+        String sql = "SELECT device_id FROM mobile_devices ORDER BY device_id DESC LIMIT 1";
+        try (Connection conn = getConnection(); PreparedStatement stmt = conn.prepareStatement(sql); ResultSet rs = stmt.executeQuery()) {
+            if (rs.next()) {
+                return rs.getInt("device_id");
+            } else {
+                throw new SQLException("Ingen mobil enhet finns.");
+            }
+        }
+    }
+
     public boolean insertMobileDevice(MobileDevice device) {
         String sql = "INSERT INTO mobile_devices (customer_id, brand, model, serial_number, submission_date) VALUES (?, ?, ?, ?, ?)";
         try (Connection conn = getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -29,9 +40,14 @@ public class MobileDeviceDAO {
             stmt.setString(2, device.getBrand());
             stmt.setString(3, device.getModel());
             stmt.setString(4, device.getSerialNumber());
-            stmt.setTimestamp(5, new Timestamp(device.getSubmissionDate().getTime()));
+            if (device.getSubmissionDate() != null) {
+                stmt.setTimestamp(5, new Timestamp(device.getSubmissionDate().getTime()));
+            } else {
+                stmt.setTimestamp(5, null); // Hantera null-värdet
+            }
 
-            return stmt.executeUpdate() > 0;
+            int affectedRows = stmt.executeUpdate();
+            return affectedRows > 0;
         } catch (SQLException e) {
             e.printStackTrace();
             return false;
@@ -87,7 +103,7 @@ public class MobileDeviceDAO {
         }
     }
 
-    public List<MobileDevice> getAllMobileDevices() {
+    public List<MobileDevice> getAllMobileDevices() throws SQLException {
         List<MobileDevice> devices = new ArrayList<>();
         String sql = "SELECT * FROM mobile_devices";
         try (Connection conn = getConnection(); PreparedStatement stmt = conn.prepareStatement(sql); ResultSet rs = stmt.executeQuery()) {

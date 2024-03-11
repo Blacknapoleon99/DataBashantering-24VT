@@ -15,6 +15,16 @@ public class CustomerDAO {
                 DatabaseConfig.getUser(),
                 DatabaseConfig.getPassword());
     }
+    public int getLatestCustomerId() throws SQLException {
+        String sql = "SELECT customer_id FROM customers ORDER BY customer_id DESC LIMIT 1";
+        try (Connection conn = getConnection(); PreparedStatement stmt = conn.prepareStatement(sql); ResultSet rs = stmt.executeQuery()) {
+            if (rs.next()) {
+                return rs.getInt("customer_id");
+            } else {
+                throw new SQLException("Ingen kund finns.");
+            }
+        }
+    }
 
     public Customer getCustomerById(int customerId) {
         String sql = "SELECT * FROM customers WHERE customer_id = ?";
@@ -39,7 +49,7 @@ public class CustomerDAO {
         return null;
     }
 
-    public List<Customer> getAllCustomers() {
+    public List<Customer> getAllCustomers() throws SQLException {
         List<Customer> customers = new ArrayList<>();
         String sql = "SELECT * FROM customers";
         try (Connection conn = getConnection();
@@ -61,23 +71,30 @@ public class CustomerDAO {
         return customers;
     }
 
-    public boolean insertCustomer(Customer customer) {
+    public int insertCustomer(Customer customer) throws SQLException {
         String sql = "INSERT INTO customers (name, email, phone, address) VALUES (?, ?, ?, ?)";
-        try (Connection conn = getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-
+        try (Connection conn = getConnection(); PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             stmt.setString(1, customer.getName());
             stmt.setString(2, customer.getEmail());
             stmt.setString(3, customer.getPhone());
             stmt.setString(4, customer.getAddress());
 
             int affectedRows = stmt.executeUpdate();
-            return affectedRows > 0;
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
+            if (affectedRows > 0) {
+                // Hämta det genererade nyckelvärdet
+                try (ResultSet generatedKeys = stmt.getGeneratedKeys()) {
+                    if (generatedKeys.next()) {
+                        return generatedKeys.getInt(1); // Returnera det genererade ID:t
+                    } else {
+                        throw new SQLException("Creating customer failed, no ID obtained.");
+                    }
+                }
+            } else {
+                throw new SQLException("Creating customer failed, no rows affected.");
+            }
         }
     }
+
 
     public boolean updateCustomer(Customer customer) {
         String sql = "UPDATE customers SET name = ?, email = ?, phone = ?, address = ? WHERE customer_id = ?";
