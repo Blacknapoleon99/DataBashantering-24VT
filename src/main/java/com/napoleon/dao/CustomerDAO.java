@@ -15,17 +15,6 @@ public class CustomerDAO {
                 DatabaseConfig.getUser(),
                 DatabaseConfig.getPassword());
     }
-    public int getLatestCustomerId() throws SQLException {
-        String sql = "SELECT customer_id FROM customers ORDER BY customer_id DESC LIMIT 1";
-        try (Connection conn = getConnection(); PreparedStatement stmt = conn.prepareStatement(sql); ResultSet rs = stmt.executeQuery()) {
-            if (rs.next()) {
-                return rs.getInt("customer_id");
-            } else {
-                throw new SQLException("Ingen kund finns.");
-            }
-        }
-    }
-
     public Customer getCustomerById(int customerId) {
         String sql = "SELECT * FROM customers WHERE customer_id = ?";
         try (Connection conn = getConnection();
@@ -35,13 +24,13 @@ public class CustomerDAO {
             ResultSet rs = stmt.executeQuery();
 
             if (rs.next()) {
-                Customer customer = new Customer();
-                customer.setCustomerId(rs.getInt("customer_id"));
-                customer.setName(rs.getString("name"));
-                customer.setEmail(rs.getString("email"));
-                customer.setPhone(rs.getString("phone"));
-                customer.setAddress(rs.getString("address"));
-                return customer;
+                return new Customer(
+                        rs.getInt("customer_id"),
+                        rs.getString("name"),
+                        rs.getString("email"),
+                        rs.getString("phone"),
+                        rs.getString("address")
+                );
             }
         } catch (SQLException e) {
             e.printStackTrace();

@@ -1,78 +1,492 @@
 package com.napoleon.application;
 
-
-
 import com.napoleon.dao.CustomerDAO;
 import com.napoleon.dao.MobileDeviceDAO;
 import com.napoleon.dao.RepairJobDAO;
 import com.napoleon.model.Customer;
 import com.napoleon.model.MobileDevice;
 import com.napoleon.model.RepairJob;
-import com.napoleon.util.ConnectionManager;
+import java.sql.SQLException;
 
-
-
+import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
+
 
 public class Main {
+    private static final CustomerDAO customerDao = new CustomerDAO();
+    private static final MobileDeviceDAO mobileDeviceDao = new MobileDeviceDAO();
+    private static final RepairJobDAO repairJobDao = new RepairJobDAO();
+    private static final Scanner scanner = new Scanner(System.in);
+
+
     public static void main(String[] args) {
-        try {
-            // DAO-instanser
-            CustomerDAO customerDao = new CustomerDAO();
-            MobileDeviceDAO mobileDeviceDao = new MobileDeviceDAO();
-            RepairJobDAO repairJobDao = new RepairJobDAO();
+        System.out.println("Välkommen till Napoleons Hanteringssystem");
+        boolean running = true;
+        while (running) {
+            System.out.println("\nHuvudmeny:");
+            System.out.println("1. Hantera kunder");
+            System.out.println("2. Hantera mobila enheter");
+            System.out.println("3. Hantera reparationsjobb");
+            System.out.println("4. Avsluta programmet");
+            System.out.print("Välj ett alternativ: ");
 
-            // Skapa och lägg till flera kunder
-            Customer johnDoe = new Customer("John Doe", "john.doe@example.com", "555-0123", "123 Main St");
-            int johnDoeId = customerDao.insertCustomer(johnDoe); // Antag att insertCustomer returnerar genererat ID
+            int choice = Integer.parseInt(scanner.nextLine()); // Använd nextLine för att undvika input-fel
 
-            Customer janeSmith = new Customer("Jane Smith", "jane.smith@example.com", "555-4567", "456 Elm St");
-            int janeSmithId = customerDao.insertCustomer(janeSmith); // Antag att insertCustomer returnerar genererat ID
-
-            // Skapa och lägg till mobila enheter och associera dem med kunder
-            MobileDevice johnDevice = new MobileDevice(johnDoeId, "BrandX", "ModelY", "SN123456", new Timestamp(System.currentTimeMillis()));
-            mobileDeviceDao.insertMobileDevice(johnDevice);
-
-            MobileDevice janeDevice = new MobileDevice(janeSmithId, "BrandA", "ModelB", "SN789012", new Timestamp(System.currentTimeMillis()));
-            mobileDeviceDao.insertMobileDevice(janeDevice);
-
-            // Notera: Implementera logik för att hantera enhets-ID:er om det behövs
-
-            // Skapa och lägg till flera reparationsjobb
-            // Antag att vi hanterar enhets-ID:er korrekt här
-            RepairJob johnRepairJob = new RepairJob(johnDevice.getDeviceId(), "Cracked screen", "received", new Timestamp(System.currentTimeMillis()), null, "No additional notes");
-            repairJobDao.insertRepairJob(johnRepairJob);
-
-            RepairJob janeRepairJob = new RepairJob(janeDevice.getDeviceId(), "Battery replacement", "in_progress", new Timestamp(System.currentTimeMillis()), null, "Customer requests OEM battery");
-            repairJobDao.insertRepairJob(janeRepairJob);
-
-
-
-            // Visa information om alla poster
-            System.out.println("Alla kunder:");
-            customerDao.getAllCustomers().forEach(System.out::println);
-
-            System.out.println("Alla mobila enheter:");
-            mobileDeviceDao.getAllMobileDevices().forEach(System.out::println);
-
-            System.out.println("Alla reparationsjobb:");
-            repairJobDao.getAllRepairJobs().forEach(System.out::println);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        List<MobileDevice> devices = new ArrayList<>();
-        devices.add(new MobileDevice(1, "BrandX", "ModelY", "SN123456", new Timestamp(System.currentTimeMillis())));
-        devices.add(new MobileDevice(2, "BrandA", "ModelB", "SN789012", new Timestamp(System.currentTimeMillis())));
-
-        for (MobileDevice device : devices) {
-            if (device.getBrand() == null || device.getBrand().isEmpty()) {
-                System.out.println("Brand can't be null or empty for device");
-                continue; // Hoppa över denna iteration om brand är null eller tom
+            switch (choice) {
+                case 1:
+                    manageCustomers();
+                    break;
+                case 2:
+                    manageMobileDevices();
+                    break;
+                case 3:
+                    manageRepairJobs();
+                    break;
+                case 4:
+                    System.out.println("Avslutar programmet...");
+                    running = false;
+                    break;
+                default:
+                    System.out.println("Ogiltigt val, försök igen.");
             }
-
         }
     }
+
+    private static void manageCustomers() {
+        boolean back = false;
+        while (!back) {
+            System.out.println("\nHantera kunder:");
+            System.out.println("1. Lägg till kund");
+            System.out.println("2. Visa alla kunder");
+            System.out.println("3. Uppdatera kund");
+            System.out.println("4. Ta bort kund");
+            System.out.println("5. Återgå till huvudmenyn");
+            System.out.print("Välj ett alternativ: ");
+
+            int choice = Integer.parseInt(scanner.nextLine());
+            switch (choice) {
+                case 1:
+                    addCustomer();
+                    break;
+                case 2:
+                    listCustomers();
+                    break;
+                case 3:
+                    updateCustomer();
+                    break;
+                case 4:
+                    deleteCustomer();
+                    break;
+                case 5:
+                    back = true;
+                    break;
+                default:
+                    System.out.println("Ogiltigt val, försök igen.");
+            }
+        }
+    }
+
+    private static void addCustomer() {
+        System.out.println("\nLägg till ny kund");
+        System.out.print("Ange namn: ");
+        String name = scanner.nextLine();
+        System.out.print("Ange email: ");
+        String email = scanner.nextLine();
+        System.out.print("Ange telefon: ");
+        String phone = scanner.nextLine();
+        System.out.print("Ange adress: ");
+        String address = scanner.nextLine();
+
+        Customer customer = new Customer(name, email, phone, address);
+        try {
+            int id = customerDao.insertCustomer(customer);
+            System.out.println("Kund med ID " + id + " tillagd.");
+        } catch (SQLException e) {
+            System.out.println("Kunde inte lägga till kund: " + e.getMessage());
+        }
+    }
+
+    private static void listCustomers() {
+        try {
+            List<Customer> customers = customerDao.getAllCustomers();
+            if (customers.isEmpty()) {
+                System.out.println("Inga kunder att visa.");
+            } else {
+                for (Customer customer : customers) {
+                    System.out.println(customer);
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println("Kunde inte hämta kunder: " + e.getMessage());
+        }
+    }
+
+    private static void updateCustomer() {
+        System.out.println("\nUppdatera kund");
+        System.out.print("Ange kundens ID: ");
+        int customerId = Integer.parseInt(scanner.nextLine());
+
+        Customer existingCustomer = customerDao.getCustomerById(customerId);
+        if (existingCustomer == null) {
+            System.out.println("Kunden med ID " + customerId + " finns inte.");
+            return;
+        }
+
+        System.out.println("Nuvarande uppgifter: " + existingCustomer);
+        System.out.println("Lämna fältet tomt om du inte vill ändra värdet.");
+
+        System.out.print("Nytt namn (" + existingCustomer.getName() + "): ");
+        String name = scanner.nextLine();
+        name = name.isEmpty() ? existingCustomer.getName() : name;
+
+        System.out.print("Ny email (" + existingCustomer.getEmail() + "): ");
+        String email = scanner.nextLine();
+        email = email.isEmpty() ? existingCustomer.getEmail() : email;
+
+        System.out.print("Nytt telefonnummer (" + existingCustomer.getPhone() + "): ");
+        String phone = scanner.nextLine();
+        phone = phone.isEmpty() ? existingCustomer.getPhone() : phone;
+
+        System.out.print("Ny adress (" + existingCustomer.getAddress() + "): ");
+        String address = scanner.nextLine();
+        address = address.isEmpty() ? existingCustomer.getAddress() : address;
+
+        Customer updatedCustomer = new Customer(customerId, name, email, phone, address);
+        boolean success = customerDao.updateCustomer(updatedCustomer);
+        if (success) {
+            System.out.println("Kunden med ID " + customerId + " har uppdaterats.");
+        } else {
+            System.out.println("Kunde inte uppdatera kunden.");
+        }
+    }
+
+
+    private static void deleteCustomer() {
+        System.out.print("Ange kundens ID för att ta bort: ");
+        int customerId = Integer.parseInt(scanner.nextLine());
+        boolean success = customerDao.deleteCustomer(customerId);
+        if (success) {
+            System.out.println("Kund med ID " + customerId + " har tagits bort.");
+        } else {
+            System.out.println("Kunde inte ta bort kund med ID " + customerId);
+        }
+    }
+    private static void addMobileDevice() {
+        System.out.println("\nLägg till en ny mobil enhet");
+        try {
+            System.out.print("Ange kundens ID: ");
+            int customerId = Integer.parseInt(scanner.nextLine());
+
+            System.out.print("Ange märke: ");
+            String brand = scanner.nextLine();
+
+            System.out.print("Ange modell: ");
+            String model = scanner.nextLine();
+
+            System.out.print("Ange serienummer: ");
+            String serialNumber = scanner.nextLine();
+
+            System.out.print("Ange inlämningsdatum (YYYY-MM-DD): ");
+            String submissionDateStr = scanner.nextLine();
+            Timestamp submissionDate = Timestamp.valueOf(submissionDateStr + " 00:00:00");
+
+            MobileDevice device = new MobileDevice(0, customerId, brand, model, serialNumber, submissionDate); // Antag att ID är auto-genererat
+            int deviceId = mobileDeviceDao.insertMobileDevice(device);
+
+            if (deviceId > 0) {
+                System.out.println("En ny mobil enhet har lagts till med enhets-ID: " + deviceId);
+            } else {
+                System.out.println("Det gick inte att lägga till den mobila enheten.");
+            }
+        } catch (NumberFormatException e) {
+            System.out.println("Felaktig inmatning, var vänlig och ange numeriska värden där det efterfrågas.");
+        } catch (Exception e) {
+            System.out.println("Ett fel uppstod vid tillägg av den mobila enheten: " + e.getMessage());
+        }
+    }
+
+    private static void listMobileDevices() {
+        try {
+            List<MobileDevice> devices = mobileDeviceDao.getAllMobileDevices();
+            if (devices.isEmpty()) {
+                System.out.println("Inga mobila enheter finns registrerade.");
+            } else {
+                for (MobileDevice device : devices) {
+                    System.out.println(device);
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println("Ett fel uppstod vid hämtning av mobila enheter: " + e.getMessage());
+        }
+    }
+
+
+
+
+
+
+    private static void manageMobileDevices() {
+        boolean back = false;
+        while (!back) {
+            System.out.println("\nHantera mobila enheter:");
+            System.out.println("1. Lägg till ny mobil enhet");
+            System.out.println("2. Visa alla mobila enheter");
+            System.out.println("3. Uppdatera mobil enhet");
+            System.out.println("4. Ta bort mobil enhet");
+            System.out.println("5. Återgå till huvudmenyn");
+            System.out.print("Välj ett alternativ: ");
+
+            int choice = scanner.nextInt();
+            scanner.nextLine(); // Rensa buffer
+
+            switch (choice) {
+                case 1:
+                    addMobileDevice();
+                    break;
+                case 2:
+                    listMobileDevices();
+                    break;
+                case 3:
+                    updateMobileDevice();
+                    break;
+                case 4:
+                    deleteMobileDevice();
+                    break;
+                case 5:
+                    back = true;
+                    break;
+                default:
+                    System.out.println("Ogiltigt val, försök igen.");
+            }
+        }
+    }
+
+    private static void updateMobileDevice() {
+        try {
+            System.out.println("\nUppdatera en mobil enhet");
+            System.out.print("Ange ID för den mobila enheten du vill uppdatera: ");
+            int deviceId = Integer.parseInt(scanner.nextLine());
+
+            if (!mobileDeviceDao.deviceExists(deviceId)) {
+                System.out.println("Ingen mobil enhet med det angivna ID:t finns.");
+                return;
+            }
+
+            System.out.print("Ange nytt märke (lämna tomt för att inte ändra): ");
+            String brand = scanner.nextLine();
+
+            System.out.print("Ange ny modell (lämna tomt för att inte ändra): ");
+            String model = scanner.nextLine();
+
+            System.out.print("Ange nytt serienummer (lämna tomt för att inte ändra): ");
+            String serialNumber = scanner.nextLine();
+
+            MobileDevice deviceToUpdate = mobileDeviceDao.getMobileDeviceById(deviceId);
+            if (!brand.isEmpty()) deviceToUpdate.setBrand(brand);
+            if (!model.isEmpty()) deviceToUpdate.setModel(model);
+            if (!serialNumber.isEmpty()) deviceToUpdate.setSerialNumber(serialNumber);
+
+            boolean success = mobileDeviceDao.updateMobileDevice(deviceToUpdate);
+
+            if (success) {
+                System.out.println("Mobil enhet har uppdaterats.");
+            } else {
+                System.out.println("Det gick inte att uppdatera den mobila enheten.");
+            }
+        } catch (Exception e) {
+            System.out.println("Ett fel uppstod vid uppdatering av den mobila enheten: " + e.getMessage());
+        }
+    }
+
+
+
+    private static void manageRepairJobs() {
+        boolean back = false;
+        while (!back) {
+            System.out.println("\nHantera reparationsjobb:");
+            System.out.println("1. Lägg till nytt reparationsjobb");
+            System.out.println("2. Visa alla reparationsjobb");
+            System.out.println("3. Uppdatera reparationsjobb");
+            System.out.println("4. Ta bort reparationsjobb");
+            System.out.println("5. Återgå till huvudmenyn");
+            System.out.print("Välj ett alternativ: ");
+
+            int choice = Integer.parseInt(scanner.nextLine());
+
+            switch (choice) {
+                case 1:
+                    addRepairJob();
+                    break;
+                case 2:
+                    listRepairJobs();
+                    break;
+                case 3:
+                    updateRepairJob();
+                    break;
+                case 4:
+                    deleteRepairJob();
+                    break;
+                case 5:
+                    back = true;
+                    break;
+                default:
+                    System.out.println("Ogiltigt val, försök igen.");
+            }
+        }
+    }
+    
+    // Ska implementera input-validering och felhantering för varje metod.
+
+    private static void deleteMobileDevice() {
+        System.out.print("Ange ID för den mobila enheten du vill ta bort: ");
+        int deviceId = Integer.parseInt(scanner.nextLine());
+
+        try {
+            if (mobileDeviceDao.deviceExists(deviceId)) {
+                boolean success = mobileDeviceDao.deleteMobileDevice(deviceId);
+                if (success) {
+                    System.out.println("Den mobila enheten har tagits bort.");
+                } else {
+                    System.out.println("Det gick inte att ta bort den mobila enheten.");
+                }
+            } else {
+                System.out.println("Ingen mobil enhet med det angivna ID:t finns.");
+            }
+        } catch (SQLException e) {
+            System.out.println("Ett fel inträffade: " + e.getMessage());
+        }
+    }
+
+    private static void addRepairJob() {
+        try {
+            System.out.println("\nLägg till ett nytt reparationsjobb");
+
+            System.out.print("Ange enhetens ID: ");
+            int deviceId = Integer.parseInt(scanner.nextLine());
+
+            if (!mobileDeviceDao.deviceExists(deviceId)) {
+                System.out.println("Enheten med angivet ID finns inte.");
+                return;
+            }
+
+            System.out.print("Ange problem beskrivning: ");
+            String problemDescription = scanner.nextLine();
+
+            System.out.print("Ange status för reparationen (t.ex. 'pending', 'in_progress', 'completed'): ");
+            String status = scanner.nextLine();
+
+            System.out.print("Ange beräknat färdigdatum (YYYY-MM-DD), lämna tomt om okänt: ");
+            String estimatedCompletionStr = scanner.nextLine();
+            Timestamp estimatedCompletionDate = null;
+            if (!estimatedCompletionStr.isEmpty()) {
+                estimatedCompletionDate = Timestamp.valueOf(estimatedCompletionStr + " 00:00:00");
+            }
+
+            RepairJob newJob = new RepairJob(0, deviceId, problemDescription, status, estimatedCompletionDate, null, ""); // Antag att ID är auto-genererat
+            boolean success = repairJobDao.insertRepairJob(newJob);
+
+            if (success) {
+                System.out.println("Nytt reparationsjobb har lagts till.");
+            } else {
+                System.out.println("Det gick inte att lägga till reparationsjobbet.");
+            }
+        } catch (NumberFormatException e) {
+            System.out.println("Felaktig inmatning, var vänlig och ange numeriska värden där det efterfrågas.");
+        } catch (Exception e) {
+            System.out.println("Ett fel uppstod: " + e.getMessage());
+        }
+    }
+
+    private static void deleteRepairJob() {
+        try {
+            System.out.println("\nTa bort ett reparationsjobb");
+            System.out.print("Ange ID för reparationsjobbet du vill ta bort: ");
+            int jobId = Integer.parseInt(scanner.nextLine());
+
+            boolean success = repairJobDao.deleteRepairJob(jobId);
+
+            if (success) {
+                System.out.println("Reparationsjobbet har tagits bort.");
+            } else {
+                System.out.println("Det gick inte att ta bort reparationsjobbet.");
+            }
+        } catch (Exception e) {
+            System.out.println("Ett fel uppstod vid borttagning av reparationsjobbet: " + e.getMessage());
+        }
+    }
+
+    private static void updateRepairJob() {
+        try {
+            System.out.println("\nUppdatera ett reparationsjobb");
+            System.out.print("Ange ID för reparationsjobbet du vill uppdatera: ");
+            int jobId = Integer.parseInt(scanner.nextLine());
+
+            RepairJob jobToUpdate = repairJobDao.getRepairJobById(jobId);
+            if (jobToUpdate == null) {
+                System.out.println("Reparationsjobbet finns inte.");
+                return;
+            }
+
+            System.out.print("Ange ny problem beskrivning (lämna tomt för att inte ändra): ");
+            String problemDescription = scanner.nextLine();
+            if (!problemDescription.isEmpty()) jobToUpdate.setProblemDescription(problemDescription);
+
+            System.out.print("Ange ny status (lämna tomt för att inte ändra): ");
+            String status = scanner.nextLine();
+            if (!status.isEmpty()) jobToUpdate.setStatus(status);
+
+            boolean success = repairJobDao.updateRepairJob(jobToUpdate);
+
+            if (success) {
+                System.out.println("Reparationsjobbet har uppdaterats.");
+            } else {
+                System.out.println("Det gick inte att uppdatera reparationsjobbet.");
+            }
+        } catch (Exception e) {
+            System.out.println("Ett fel uppstod vid uppdatering av reparationsjobbet: " + e.getMessage());
+        }
+    }
+
+    private static void listRepairJobs() {
+        try {
+            List<RepairJob> repairJobs = repairJobDao.getAllRepairJobs();
+            if (repairJobs.isEmpty()) {
+                System.out.println("Det finns inga registrerade reparationsjobb.");
+            } else {
+                System.out.println("\nLista över alla reparationsjobb:");
+                for (RepairJob job : repairJobs) {
+                    System.out.println("Job ID: " + job.getJobId() + ", Device ID: " + job.getDeviceId() +
+                            ", Problem: " + job.getProblemDescription() +
+                            ", Status: " + job.getStatus() +
+                            ", Submission Date: " + job.getSubmissionDate()); // Antagande att dessa getters finns
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println("Ett fel uppstod när reparationsjobben skulle listas: " + e.getMessage());
+        }
+    }
+
+
+
+
+    private static int getValidatedIntegerInput(String prompt) {
+        int input = -1;
+        while (input < 0) {
+            try {
+                System.out.print(prompt);
+                input = Integer.parseInt(scanner.nextLine());
+                if (input < 0) {
+                    System.out.println("Ange ett positivt tal.");
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("Ogiltig inmatning, ange ett nummer.");
+            }
+        }
+        return input;
+    }
+
+
 }
+

@@ -13,11 +13,8 @@ public class Customer {
     // Standardkonstruktor
     public Customer() {
     }
-    public Timestamp getCreatedAt() {
-        return createdAt;
-    }
 
-    // Fullständig konstruktor
+    // Konstruktor utan customerId för nya kunder
     public Customer(String name, String email, String phone, String address) {
         this.name = name;
         this.email = email;
@@ -25,49 +22,61 @@ public class Customer {
         this.address = address;
     }
 
+    // Fullständig konstruktor inklusive customerId för uppdateringar
+    public Customer(int customerId, String name, String email, String phone, String address) {
+        this.customerId = customerId;
+        this.name = name;
+        this.email = email;
+        this.phone = phone;
+        this.address = address;
+    }
 
-    // Getters
+    // Getters och Setters
     public int getCustomerId() {
         return customerId;
+    }
+
+    public void setCustomerId(int customerId) {
+        this.customerId = customerId;
     }
 
     public String getName() {
         return name;
     }
 
-    public String getEmail() {
-        return email;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    // Setters
-    public void setCustomerId(int customerId) {
-        this.customerId = customerId;
-    }
-
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getEmail() {
+        return email;
     }
 
     public void setEmail(String email) {
         this.email = email;
     }
 
+    public String getPhone() {
+        return phone;
+    }
+
     public void setPhone(String phone) {
         this.phone = phone;
+    }
+
+    public String getAddress() {
+        return address;
     }
 
     public void setAddress(String address) {
         this.address = address;
     }
 
+    public Timestamp getCreatedAt() {
+        return createdAt;
+    }
+
+    // toString-metoden
     @Override
     public String toString() {
         return "Customer{" +
@@ -78,7 +87,6 @@ public class Customer {
                 ", address='" + address + '\'' +
                 '}';
     }
-
 }
 
 

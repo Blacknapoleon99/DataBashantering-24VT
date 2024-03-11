@@ -63,15 +63,13 @@ public class MobileDeviceDAO {
         }
     }
 
-    public boolean deviceExists(int deviceId) {
+    public boolean deviceExists(int deviceId) throws SQLException {
         String sql = "SELECT 1 FROM mobile_devices WHERE device_id = ?";
-        try (Connection conn = getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setInt(1, deviceId);
-            ResultSet rs = stmt.executeQuery();
-            return rs.next(); // Returnerar true om raden existerar, annars false
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
+        try (Connection conn = getConnection(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setInt(1, deviceId);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                return rs.next();
+            }
         }
     }
 
@@ -114,16 +112,15 @@ public class MobileDeviceDAO {
         }
     }
 
-    public boolean deleteMobileDevice(int deviceId) {
+    public boolean deleteMobileDevice(int deviceId) throws SQLException {
         String sql = "DELETE FROM mobile_devices WHERE device_id = ?";
-        try (Connection conn = getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setInt(1, deviceId);
-            return stmt.executeUpdate() > 0;
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
+        try (Connection conn = getConnection(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setInt(1, deviceId);
+            int affectedRows = pstmt.executeUpdate();
+            return affectedRows > 0;
         }
     }
+
 
     public List<MobileDevice> getAllMobileDevices() throws SQLException {
         List<MobileDevice> devices = new ArrayList<>();

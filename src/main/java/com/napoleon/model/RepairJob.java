@@ -9,8 +9,11 @@ public class RepairJob {
     private String repairStatus;
     private Timestamp estimatedCompletionDate;
     private Timestamp completionDate;
-
+    private String status;
     private String notes;
+    private String SubmissionDate;
+
+
 
     // Standardkonstruktor
     public RepairJob(int deviceId, String problemDescription, String repairStatus, Timestamp estimatedCompletionDate, Timestamp completionDate, String notes) {
@@ -85,6 +88,17 @@ public class RepairJob {
 
     public void setNotes(String notes) {
         this.notes = notes;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+    public String getSubmissionDate() {
+        return SubmissionDate;
     }
 
     public Timestamp getCompletionDate() {
