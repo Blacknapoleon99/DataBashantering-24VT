@@ -12,6 +12,11 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.List;
 import java.util.Scanner;
+import java.text.SimpleDateFormat;
+import java.sql.Timestamp;
+import java.text.ParseException;
+import java.util.Date;
+
 
 
 public class Main {
@@ -20,6 +25,7 @@ public class Main {
     private static final RepairJobDAO repairJobDao = new RepairJobDAO();
 
     private static final Scanner scanner = new Scanner(System.in);
+    private static Timestamp estimatedCompletionDate;
 
 
     public static void main(String[] args) {
@@ -388,23 +394,27 @@ public class Main {
                     return;
             }
 
-            System.out.print("Ange beräknat färdigdatum (YYYY-MM-DD), lämna tomt om okänt: ");
-            String estimatedCompletionStr = scanner.nextLine();
+            System.out.print("Ange beräknat färdigdatum och tid (YYYY-MM-DD HH:MM): ");
+            String dateTimeStr = scanner.nextLine();
             Timestamp estimatedCompletionDate = null;
-            if (!estimatedCompletionStr.isEmpty()) {
-                estimatedCompletionDate = Timestamp.valueOf(estimatedCompletionStr + " 00:00:00");
+            if (!dateTimeStr.isEmpty()) {
+                try {
+                    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+                    Date parsedDate = dateFormat.parse(dateTimeStr);
+                    estimatedCompletionDate = new Timestamp(parsedDate.getTime());
+                } catch (ParseException e) {
+                    System.out.println("Felaktigt datumformat. Ange datumet i formatet YYYY-MM-DD HH:MM");
+                    return; // Avbryter metoden om datumet är i fel format
+                }
             }
 
-            RepairJob newJob = new RepairJob(0, deviceId, problemDescription, status, estimatedCompletionDate, null, ""); // Antag att ID är auto-genererat
+            // Skapa ett nytt RepairJob-objekt med estimatedCompletionDate
+            RepairJob newJob = new RepairJob(0, deviceId, problemDescription, status, estimatedCompletionDate, null, "");
             boolean success = repairJobDao.insertRepairJob(newJob);
 
-            if (success) {
-                System.out.println("Nytt reparationsjobb har lagts till.");
-            } else {
-                System.out.println("Det gick inte att lägga till reparationsjobbet.");
-            }
+            // ... resten av din kod ...
         } catch (Exception e) {
-            System.out.println("Ett fel uppstod: " + e.getMessage());
+            System.out.println("Ett fel uppstod vid tillägg av reparationsjobbet: " + e.getMessage());
         }
     }
 
@@ -438,6 +448,19 @@ public class Main {
                 System.out.println("Reparationsjobbet finns inte.");
                 return;
             }
+            System.out.print("Ange nytt beräknat färdigdatum och tid (YYYY-MM-DD HH:MM), lämna tomt om inte ändring: ");
+            String newDateTimeStr = scanner.nextLine();
+            if (!newDateTimeStr.isEmpty()) {
+                try {
+                    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+                    Date parsedDate = dateFormat.parse(newDateTimeStr);
+                    Timestamp newEstimatedCompletionDate = new Timestamp(parsedDate.getTime());
+                    jobToUpdate.setEstimatedCompletionDate(newEstimatedCompletionDate);
+                } catch (ParseException e) {
+                    System.out.println("Felaktigt datumformat. Ange datumet i formatet YYYY-MM-DD HH:MM");
+                    return; // Avbryter metoden om datumet är i fel format
+                }
+            }
 
             System.out.print("Ange ny problem beskrivning (lämna tomt för att inte ändra): ");
             String problemDescription = scanner.nextLine();
@@ -457,28 +480,33 @@ public class Main {
         } catch (Exception e) {
             System.out.println("Ett fel uppstod vid uppdatering av reparationsjobbet: " + e.getMessage());
         }
+
     }
 
     private static void listRepairJobs() {
         try {
-            List<RepairJob> repairJobs = repairJobDao.getAllRepairJobs(); // Antag att detta är en metod som hämtar alla reparationsjobb.
+            List<RepairJob> repairJobs = repairJobDao.getAllRepairJobs();
             if (repairJobs.isEmpty()) {
                 System.out.println("Det finns inga registrerade reparationsjobb.");
             } else {
                 System.out.println("\nLista över alla reparationsjobb:");
+                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm"); // Formatering för datum och tid
                 for (RepairJob job : repairJobs) {
-
+                    String formattedEstimatedCompletionDate = job.getEstimatedCompletionDate() != null ?
+                            dateFormat.format(job.getEstimatedCompletionDate()) : "N/A";
                     System.out.println("Job ID: " + job.getJobId() +
                             ", Device ID: " + job.getDeviceId() +
                             ", Problem: " + job.getProblemDescription() +
-                            ", Repair Status: " + job.getRepairStatus() +  // Uppdaterad metodnamn
-                            ", Estimated Completion Date: " + (job.getEstimatedCompletionDate() != null ? job.getEstimatedCompletionDate().toString() : "N/A")); // Uppdaterad metodnamn
+                            ", Repair Status: " + job.getRepairStatus() +
+                            ", Estimated Completion Date: " + formattedEstimatedCompletionDate); // Använder den formaterade strängen
                 }
             }
         } catch (SQLException e) {
             System.out.println("Ett fel uppstod när reparationsjobben skulle listas: " + e.getMessage());
         }
     }
+
+
     private static int getValidatedIntegerInput(String prompt) {
         int input = -1;
         while (input < 0) {

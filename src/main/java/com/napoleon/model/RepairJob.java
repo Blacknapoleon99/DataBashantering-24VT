@@ -1,6 +1,8 @@
 package com.napoleon.model;
 
 import java.sql.Timestamp;
+import java.text.ParseException;
+import java.util.Date;
 
 public class RepairJob {
     private int jobId;
@@ -10,6 +12,7 @@ public class RepairJob {
     private Timestamp estimatedCompletionDate;
     private Timestamp completionDate;
     private String notes;
+
 
 
 
