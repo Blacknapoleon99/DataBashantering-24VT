@@ -4,7 +4,6 @@ import java.sql.Timestamp;
 
 
 
-
 public class MobileDevice {
     private int deviceId;
     private int customerId;
@@ -22,7 +21,10 @@ public class MobileDevice {
         this.serialNumber = serialNumber;
         this.submissionDate = submissionDate;
     }
+
+
     // Konstruktor utan deviceId för nya enheter som ska läggas till
+
     public MobileDevice(int customerId, String brand, String model, String serialNumber, Timestamp submissionDate) {
         // Notera att deviceId inte inkluderas här, lämplig för nya enheter
         this.customerId = customerId;
@@ -32,10 +34,7 @@ public class MobileDevice {
         this.submissionDate = submissionDate;
     }
 
-
-
     // Getters och Setters
-
 
     public void setDeviceId(int deviceId) {
         this.deviceId = deviceId;

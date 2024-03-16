@@ -8,16 +8,13 @@ import com.napoleon.model.MobileDevice;
 import com.napoleon.model.RepairJob;
 import java.sql.SQLException;
 
-import java.sql.SQLException;
+
 import java.sql.Timestamp;
 import java.util.List;
 import java.util.Scanner;
 import java.text.SimpleDateFormat;
-import java.sql.Timestamp;
 import java.text.ParseException;
 import java.util.Date;
-
-
 
 public class Main {
     private static final CustomerDAO customerDao = new CustomerDAO();
@@ -28,6 +25,7 @@ public class Main {
     private static Timestamp estimatedCompletionDate;
 
 
+    // Huvudmeny för programmet med en while-loop som körs tills användaren väljer att avsluta programmet.
     public static void main(String[] args) {
         System.out.println("Välkommen till Napoleons Hanteringssystem");
         boolean running = true;
@@ -39,7 +37,7 @@ public class Main {
             System.out.println("4. Avsluta programmet");
             System.out.print("Välj ett alternativ: ");
 
-            int choice = Integer.parseInt(scanner.nextLine()); // nextLine för att undvika input-fel
+            int choice = Integer.parseInt(scanner.nextLine());
 
             switch (choice) {
                 case 1:
@@ -61,7 +59,7 @@ public class Main {
         }
     }
 
-    private static void manageCustomers() {
+    private static void manageCustomers() { // Meny för att Hantera kunder och deras data
         boolean back = false;
         while (!back) {
             System.out.println("\nHantera kunder:");
@@ -95,6 +93,7 @@ public class Main {
         }
     }
 
+    // Metoder för att lägga till, visa, uppdatera och ta bort kunder
     private static void addCustomer() {
         System.out.println("\nLägg till ny kund");
         System.out.print("Ange namn: ");
@@ -115,6 +114,8 @@ public class Main {
         }
     }
 
+
+    // Metod för att visa alla kunder
     private static void listCustomers() {
         try {
             List<Customer> customers = customerDao.getAllCustomers();
@@ -129,7 +130,7 @@ public class Main {
             System.out.println("Kunde inte hämta kunder: " + e.getMessage());
         }
     }
-
+    //
     private static void updateCustomer() {
         System.out.println("\nUppdatera kund");
         System.out.print("Ange kundens ID: ");
@@ -169,7 +170,7 @@ public class Main {
         }
     }
 
-
+     // Metod för att ta bort kund
     private static void deleteCustomer() {
         System.out.print("Ange kundens ID för att ta bort: ");
         int customerId = Integer.parseInt(scanner.nextLine());
@@ -180,6 +181,10 @@ public class Main {
             System.out.println("Kunde inte ta bort kund med ID " + customerId);
         }
     }
+
+
+
+    // Metoder för att lägga till, visa etc mm mobila enheter
     private static void addMobileDevice() {
         System.out.println("\nLägg till en ny mobil enhet");
         try {
@@ -214,6 +219,8 @@ public class Main {
         }
     }
 
+
+    //  Metod för att visa alla mobila enheter
     private static void listMobileDevices() {
         try {
             List<MobileDevice> devices = mobileDeviceDao.getAllMobileDevices();
@@ -230,9 +237,7 @@ public class Main {
     }
 
 
-
-
-
+    // Metod för att uppdatera en mobil enhet
 
     private static void manageMobileDevices() {
         boolean back = false;
@@ -269,6 +274,9 @@ public class Main {
             }
         }
     }
+
+
+    // uppdatera en mobil enhet
 
     private static void updateMobileDevice() {
         try {

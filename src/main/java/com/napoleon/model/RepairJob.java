@@ -4,6 +4,7 @@ import java.sql.Timestamp;
 import java.text.ParseException;
 import java.util.Date;
 
+
 public class RepairJob {
     private int jobId;
     private int deviceId;
@@ -13,7 +14,16 @@ public class RepairJob {
     private Timestamp completionDate;
     private String notes;
 
-
+    // Fullständig konstruktor inklusive jobId för uppdateringar
+    public RepairJob(int jobId, int deviceId, String problemDescription, String repairStatus, Timestamp estimatedCompletionDate, Timestamp completionDate, String notes) {
+        this.jobId = jobId;
+        this.deviceId = deviceId;
+        this.problemDescription = problemDescription;
+        this.repairStatus = repairStatus;
+        this.estimatedCompletionDate = estimatedCompletionDate;
+        this.completionDate = completionDate;
+        this.notes = notes;
+    }
 
 
     // Standardkonstruktor
@@ -26,16 +36,7 @@ public class RepairJob {
         this.notes = notes;
     }
 
-    // Fullständig konstruktor
-    public RepairJob(int jobId, int deviceId, String problemDescription, String repairStatus, Timestamp estimatedCompletionDate, Timestamp completionDate, String notes) {
-        this.jobId = jobId;
-        this.deviceId = deviceId;
-        this.problemDescription = problemDescription;
-        this.repairStatus = repairStatus;
-        this.estimatedCompletionDate = estimatedCompletionDate;
-        this.completionDate = completionDate;
-        this.notes = notes;
-    }
+
 
     // Getters och Setters
     public int getJobId() {

@@ -26,6 +26,8 @@ import java.sql.Timestamp;
                     DatabaseConfig.getPassword());
         }
 
+
+        // Metod för att lägga till en ny reparation
         public boolean insertRepairJob(RepairJob repairJob) {
             String sql = "INSERT INTO repair_jobs (device_id, problem_description, repair_status, estimated_completion_date, completion_date, notes) VALUES (?, ?, ?, ?, ?, ?)";
             try (Connection conn = getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -100,9 +102,6 @@ import java.sql.Timestamp;
         }
         return null;
     }
-
-
-
 
     public boolean updateRepairJob(RepairJob repairJob) {
         String sql = "UPDATE repair_jobs SET device_id = ?, problem_description = ?, repair_status = ?, estimated_completion_date = ?, completion_date = ? WHERE job_id = ?";
