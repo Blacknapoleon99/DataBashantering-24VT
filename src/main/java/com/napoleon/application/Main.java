@@ -28,7 +28,7 @@ public class Main {
         System.out.print(prompt);
         return scanner.nextLine().trim();
     }
-
+ffsd
     // Huvudmeny för programmet med en while-loop som körs tills användaren väljer att avsluta programmet.
     public static void main(String[] args) {
         System.out.println("Välkommen till Napoleons Hanteringssystem");

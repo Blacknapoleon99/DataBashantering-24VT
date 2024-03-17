@@ -6,8 +6,11 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="DataBashantering-24VT" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="DataBashantering-24VT" target="17" />
+      <module name="dbh-vt24-inlamning-Blacknapoleon99" target="17" />
+    </bytecodeTargetLevel>
   </component>
 </project>
