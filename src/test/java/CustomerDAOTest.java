@@ -13,17 +13,21 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+
+// Test av CustomerDAO
 public class CustomerDAOTest {
 
-    @Mock
+    @Mock // Mocka JDBC-anslutning
     private Connection mockConnection;
-    @Mock
+    @Mock // Mocka JDBC-förfrågan
     private PreparedStatement mockPreparedStatement;
-    @Mock
+    @Mock  // Mocka JDBC-resultat
     private ResultSet mockResultSet;
 
     private CustomerDAO customerDAO;
 
+
+    // Färberedelse av test
     @BeforeEach
     public void setUp() {
         MockitoAnnotations.openMocks(this);
@@ -35,6 +39,8 @@ public class CustomerDAOTest {
         };
     }
 
+
+    // Test att sätta alla kunder
     @Test
     public void insertCustomerTest() throws SQLException {
         Customer customer = new Customer(1, "Test Name", "test@example.com", "123456789", "Test Address");
@@ -55,6 +61,8 @@ public class CustomerDAOTest {
         verify(mockPreparedStatement, times(1)).getGeneratedKeys();
     }
 
+
+    // Test att hämta alla kunder
     @Test
     public void getCustomerByIdTest() throws SQLException {
         when(mockConnection.prepareStatement(anyString())).thenReturn(mockPreparedStatement);
@@ -73,6 +81,8 @@ public class CustomerDAOTest {
         verify(mockPreparedStatement, times(1)).executeQuery();
     }
 
+
+    // test att uppdatera kund
     @Test
     public void updateCustomerTest() throws SQLException {
         Customer customer = new Customer(1, "Updated Name", "updated@example.com", "987654321", "Updated Address");
@@ -85,6 +95,8 @@ public class CustomerDAOTest {
         verify(mockPreparedStatement, times(1)).executeUpdate();
     }
 
+
+    // Test att radera kunddd
     @Test
     public void deleteCustomerTest() throws SQLException {
         when(mockConnection.prepareStatement(anyString())).thenReturn(mockPreparedStatement);
