@@ -38,15 +38,21 @@ public class CustomerDAOTest {
     @Test
     public void insertCustomerTest() throws SQLException {
         Customer customer = new Customer(1, "Test Name", "test@example.com", "123456789", "Test Address");
-        when(mockConnection.prepareStatement(anyString(), anyInt())).thenReturn(mockPreparedStatement);
-        when(mockPreparedStatement.getGeneratedKeys()).thenReturn(mockResultSet);
-        when(mockResultSet.next()).thenReturn(true);
-        when(mockResultSet.getInt(1)).thenReturn(1); // Simulera genererat kund-ID
 
+        // Förbereder mock  för simulera ny kund
+        when(mockConnection.prepareStatement(anyString(), anyInt())).thenReturn(mockPreparedStatement);
+        when(mockPreparedStatement.executeUpdate()).thenReturn(1); // Antag att en rad påverkas
+        when(mockPreparedStatement.getGeneratedKeys()).thenReturn(mockResultSet);
+        when(mockResultSet.next()).thenReturn(true); // Simulera att en genererad nyckel finns
+        when(mockResultSet.getInt(1)).thenReturn(1); // Simulera den genererade nyckelns värde
+
+        // Utför test av simulerard kund
         int customerId = customerDAO.insertCustomer(customer);
 
-        assertEquals(1, customerId);
+        // Verifiering av resultat
+        assertEquals(1, customerId, "Expected generated customer ID to be 1.");
         verify(mockPreparedStatement, times(1)).executeUpdate();
+        verify(mockPreparedStatement, times(1)).getGeneratedKeys();
     }
 
     @Test
