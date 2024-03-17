@@ -24,6 +24,10 @@ public class Main {
     private static final Scanner scanner = new Scanner(System.in);
     private static Timestamp estimatedCompletionDate;
 
+    private static String getInput(String prompt) {
+        System.out.print(prompt);
+        return scanner.nextLine().trim();
+    }
 
     // Huvudmeny för programmet med en while-loop som körs tills användaren väljer att avsluta programmet.
     public static void main(String[] args) {
@@ -35,31 +39,34 @@ public class Main {
             System.out.println("2. Hantera mobila enheter");
             System.out.println("3. Hantera reparationsjobb");
             System.out.println("4. Avsluta programmet");
-            System.out.print("Välj ett alternativ: ");
-
-            int choice = Integer.parseInt(scanner.nextLine());
-
-            switch (choice) {
-                case 1:
-                    manageCustomers();
-                    break;
-                case 2:
-                    manageMobileDevices();
-                    break;
-                case 3:
-                    manageRepairJobs();
-                    break;
-                case 4:
-                    System.out.println("Avslutar programmet...");
-                    running = false;
-                    break;
-                default:
-                    System.out.println("Ogiltigt val, försök igen.");
+            try {
+                System.out.print("Välj ett alternativ: ");
+                int choice = Integer.parseInt(scanner.nextLine());
+                switch (choice) {
+                    case 1:
+                        manageCustomers();
+                        break;
+                    case 2:
+                        manageMobileDevices();
+                        break;
+                    case 3:
+                        manageRepairJobs();
+                        break;
+                    case 4:
+                        System.out.println("Avslutar programmet...");
+                        running = false;
+                        break;
+                    default:
+                        System.out.println("Ogiltigt val, försök igen.");
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("Ange ett nummer för ditt val.");
             }
+
         }
     }
 
-    private static void manageCustomers() { // Meny för att Hantera kunder och deras data
+    private static void manageCustomers() {
         boolean back = false;
         while (!back) {
             System.out.println("\nHantera kunder:");
@@ -68,27 +75,30 @@ public class Main {
             System.out.println("3. Uppdatera kund");
             System.out.println("4. Ta bort kund");
             System.out.println("5. Återgå till huvudmenyn");
-            System.out.print("Välj ett alternativ: ");
-
-            int choice = Integer.parseInt(scanner.nextLine());
-            switch (choice) {
-                case 1:
-                    addCustomer();
-                    break;
-                case 2:
-                    listCustomers();
-                    break;
-                case 3:
-                    updateCustomer();
-                    break;
-                case 4:
-                    deleteCustomer();
-                    break;
-                case 5:
-                    back = true;
-                    break;
-                default:
-                    System.out.println("Ogiltigt val, försök igen.");
+            try {
+                System.out.print("Välj ett alternativ: ");
+                int choice = Integer.parseInt(scanner.nextLine());
+                switch (choice) {
+                    case 1:
+                        addCustomer();
+                        break;
+                    case 2:
+                        listCustomers();
+                        break;
+                    case 3:
+                        updateCustomer();
+                        break;
+                    case 4:
+                        deleteCustomer();
+                        break;
+                    case 5:
+                        back = true;
+                        break;
+                    default:
+                        System.out.println("Ogiltigt val, försök igen.");
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("Ange ett nummer för ditt val.");
             }
         }
     }
@@ -130,6 +140,7 @@ public class Main {
             System.out.println("Kunde inte hämta kunder: " + e.getMessage());
         }
     }
+
     //
     private static void updateCustomer() {
         System.out.println("\nUppdatera kund");
@@ -248,29 +259,30 @@ public class Main {
             System.out.println("3. Uppdatera mobil enhet");
             System.out.println("4. Ta bort mobil enhet");
             System.out.println("5. Återgå till huvudmenyn");
-            System.out.print("Välj ett alternativ: ");
-
-            int choice = scanner.nextInt();
-            scanner.nextLine(); // Rensa buffer
-
-            switch (choice) {
-                case 1:
-                    addMobileDevice();
-                    break;
-                case 2:
-                    listMobileDevices();
-                    break;
-                case 3:
-                    updateMobileDevice();
-                    break;
-                case 4:
-                    deleteMobileDevice();
-                    break;
-                case 5:
-                    back = true;
-                    break;
-                default:
-                    System.out.println("Ogiltigt val, försök igen.");
+            try {
+                System.out.print("Välj ett alternativ: ");
+                int choice = Integer.parseInt(scanner.nextLine());
+                switch (choice) {
+                    case 1:
+                        addMobileDevice();
+                        break;
+                    case 2:
+                        listMobileDevices();
+                        break;
+                    case 3:
+                        updateMobileDevice();
+                        break;
+                    case 4:
+                        deleteMobileDevice();
+                        break;
+                    case 5:
+                        back = true;
+                        break;
+                    default:
+                        System.out.println("Ogiltigt val, försök igen.");
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("Ange ett nummer för ditt val.");
             }
         }
     }
@@ -326,28 +338,30 @@ public class Main {
             System.out.println("3. Uppdatera reparationsjobb");
             System.out.println("4. Ta bort reparationsjobb");
             System.out.println("5. Återgå till huvudmenyn");
-            System.out.print("Välj ett alternativ: ");
-
-            int choice = Integer.parseInt(scanner.nextLine());
-
-            switch (choice) {
-                case 1:
-                    addRepairJob();
-                    break;
-                case 2:
-                    listRepairJobs();
-                    break;
-                case 3:
-                    updateRepairJob();
-                    break;
-                case 4:
-                    deleteRepairJob();
-                    break;
-                case 5:
-                    back = true;
-                    break;
-                default:
-                    System.out.println("Ogiltigt val, försök igen.");
+            try {
+                System.out.print("Välj ett alternativ: ");
+                int choice = Integer.parseInt(scanner.nextLine());
+                switch (choice) {
+                    case 1:
+                        addRepairJob();
+                        break;
+                    case 2:
+                        listRepairJobs();
+                        break;
+                    case 3:
+                        updateRepairJob();
+                        break;
+                    case 4:
+                        deleteRepairJob();
+                        break;
+                    case 5:
+                        back = true;
+                        break;
+                    default:
+                        System.out.println("Ogiltigt val, försök igen.");
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("Ange ett nummer för ditt val.");
             }
         }
     }
