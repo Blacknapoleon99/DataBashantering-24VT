@@ -329,7 +329,7 @@ public class Main {
 
 
 
-    private static void manageRepairJobs() {
+    private static void manageRepairJobs() { // för att lägga till, visa, uppdatera och ta bort reparationsjobb
         boolean back = false;
         while (!back) {
             System.out.println("\nHantera reparationsjobb:");
@@ -366,7 +366,6 @@ public class Main {
         }
     }
 
-    // Ska implementera input-validering och felhantering för varje metod.
 
     private static void deleteMobileDevice() {
         System.out.print("Ange ID för den mobila enheten du vill ta bort: ");
@@ -430,11 +429,10 @@ public class Main {
                 }
             }
 
-            // Skapa ett nytt RepairJob-objekt med estimatedCompletionDate
+            // Skapar ett nytt RepairJob-objekt med estimatedCompletionDate
             RepairJob newJob = new RepairJob(0, deviceId, problemDescription, status, estimatedCompletionDate, null, "");
             boolean success = repairJobDao.insertRepairJob(newJob);
 
-            // ... resten av din kod ...
         } catch (Exception e) {
             System.out.println("Ett fel uppstod vid tillägg av reparationsjobbet: " + e.getMessage());
         }
