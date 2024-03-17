@@ -9,7 +9,7 @@ import java.util.List;
 
 public class CustomerDAO {
 
-    private Connection getConnection() throws SQLException {
+    protected Connection getConnection() throws SQLException {
         return DriverManager.getConnection(
                 DatabaseConfig.getUrl(),
                 DatabaseConfig.getUser(),
