@@ -19,7 +19,7 @@ import java.sql.Timestamp;
 
     public class RepairJobDAO {
 
-        private Connection getConnection() throws SQLException {
+        protected Connection getConnection() throws SQLException {
             return DriverManager.getConnection(
                     DatabaseConfig.getUrl(),
                     DatabaseConfig.getUser(),
@@ -138,3 +138,4 @@ import java.sql.Timestamp;
         }
     }
 }
+
